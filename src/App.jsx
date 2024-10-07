@@ -1,8 +1,11 @@
 import { useState } from "react"; // Importa o hook useState do React para gerenciar estados
 import AddTask from "./components/AddTask"; // Importa o componente para adicionar tarefas
 import Tasks from "./components/Tasks"; // Importa o componente que renderiza a lista de tarefas
+import { Recycle } from "lucide-react";
 
 function App() {
+
+
   // Declara um estado para armazenar o histórico das tarefas (para desfazer alterações)
   const [taskHistory, setTaskHistory] = useState([]);
   
@@ -69,12 +72,13 @@ function App() {
 
   return (
     <div className="w-screen h-screen bg-blue-950 flex justify-center p-8">
-      <div className="w-[500px]">
+      <div className="space-y-4 w-[500px]">
         <h1 className="text-3xl text-slate-100 font-bold text-center">
           Gerenciador de Tarefas
         </h1>
 
         {/* Renderiza o componente de tarefas, passando as tarefas e as funções como props */}
+        <AddTask />
         <Tasks
           tasks={tasks}
           onTaskClick={onTaskClick}
@@ -85,9 +89,10 @@ function App() {
         {taskHistory.length > 0 && (
           <button
             onClick={undoLastChange} // Função chamada ao clicar no botão
-            className="fixed bottom-10 right-10 bg-red-500 text-white p-3 rounded-full shadow-lg"
+            className="fixed bottom-10 right-10 bg-red-500 text-white p-3 rounded-full shadow-lg text-center"
           >
-            Desfazer
+          <Recycle />
+            
           </button>
         )}
       </div>
