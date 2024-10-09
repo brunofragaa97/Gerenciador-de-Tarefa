@@ -16,25 +16,12 @@ function App() {
       title: "Estudar programação",
       description: "Estudar programação para ser um desenvolvedor Full Stack.",
       isCompleted: false, // Indica se a tarefa foi concluída
-    },
-    {
-      id: 2,
-      title: "Estudar Banco de dados",
-      description: "Estudar banco de dados para ganhar habilidades.",
-      isCompleted: false,
-    },
-    {
-      id: 3,
-      title: "Estudar inglês",
-      description: "Estudar inglês para se comunicar globalmente.",
-      isCompleted: false,
-    },
+    }
   ]);
 
   // Função para alternar o estado de conclusão de uma tarefa
   function onTaskClick(taskId) {
-    // Adiciona o estado atual das tarefas ao histórico antes de alterá-lo
-    setTaskHistory([...taskHistory, tasks]);
+   
 
     // Mapeia as tarefas, alternando a propriedade isCompleted da tarefa correspondente
     const newTasks = tasks.map((task) => {
@@ -70,6 +57,17 @@ function App() {
     }
   }
 
+  function onAddTaskSubmit (title, description)  {
+      const newTask = {
+        id: tasks.length +1,
+        title,
+        description,
+        isCompleted: false,
+      }
+      setTasks([...tasks, newTask])
+
+  }
+
   return (
     <div className="w-screen h-screen bg-blue-950 flex justify-center p-8">
       <div className="space-y-4 w-[500px]">
@@ -78,7 +76,7 @@ function App() {
         </h1>
 
         {/* Renderiza o componente de tarefas, passando as tarefas e as funções como props */}
-        <AddTask />
+        <AddTask onAddTaskSubmit={onAddTaskSubmit}/>
         <Tasks
           tasks={tasks}
           onTaskClick={onTaskClick}
