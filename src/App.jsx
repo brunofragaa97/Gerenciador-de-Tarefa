@@ -4,19 +4,17 @@ import Tasks from "./components/Tasks"; // Importa o componente que renderiza a 
 import { Recycle } from "lucide-react";
 
 function App() {
-
-
   // Declara um estado para armazenar o histórico das tarefas (para desfazer alterações)
   const [taskHistory, setTaskHistory] = useState([]);
-  
+
   // Declara um estado para armazenar a lista atual de tarefas
   const [tasks, setTasks] = useState([
     {
       id: 1,
-      title: "Estudar programação",
+      title: "Adcione sua primeira tarefa",
       description: "Estudar programação para ser um desenvolvedor Full Stack.",
       isCompleted: false, // Indica se a tarefa foi concluída
-    }
+    },
   ]);
 
   // Função para alternar o estado de conclusão de uma tarefa
@@ -55,29 +53,28 @@ function App() {
     }
   }
 
-  function onAddTaskSubmit (title, description)  {
-      const newTask = {
-        id: tasks.length +1,
-        title,
-        description,
-        isCompleted: false,
-      }
-      setTasks([...tasks, newTask])
+  function onAddTaskSubmit(title, description) {
+    const newTask = {
+      id: tasks.length + 1,
+      title,
+      description,
+      isCompleted: false,
+    };
+    setTasks([...tasks, newTask]);
+  }
 
+  function contadorDeTarefasPendentes() {
+    const contador = tasks.length;
+    const inCompleteTasks = tasks.filter((task) => task.isCompleted).length;
+    return contador - inCompleteTasks;
   }
-  
-  function contadorDeTarefasPendentes(){
-   const contador = tasks.length;
-   const inCompleteTasks = tasks.filter(task => task.isCompleted).length;
-   return contador - inCompleteTasks;
+  function contadorDeTarefasConcluidas() {
+    const inCompleteTasks = tasks.filter((task) => task.isCompleted).length;
+    if (inCompleteTasks === 1 || inCompleteTasks === 0) {
+      return "| " + inCompleteTasks + " CONCLUIDA";
+    }
+    return "| " + inCompleteTasks + " CONCLUIDAS";
   }
-  function contadorDeTarefasConcluidas(){
-    const inCompleteTasks = tasks.filter(task => task.isCompleted).length;
-    if(inCompleteTasks === 1 || inCompleteTasks === 0){
-    return "| "+ inCompleteTasks + " CONCLUIDA";
-   }
-    return "| "+ inCompleteTasks +" CONCLUIDAS";
-   }
 
   return (
     <div className="w-screen min-h-screen bg-blue-950 flex justify-center p-8">
@@ -87,13 +84,14 @@ function App() {
         </h1>
 
         {/* Renderiza o componente de tarefas, passando as tarefas e as funções como props */}
-        <AddTask onAddTaskSubmit={onAddTaskSubmit}/>
-        <h2 className="text-2xl text-white font-bold text-center">
-          TAREFAS 
-        </h2>
+        <AddTask onAddTaskSubmit={onAddTaskSubmit} />
+        <h2 className="text-2xl text-white font-bold text-center">TAREFAS</h2>
         <div className="text-xl text-center text-red-400">
-          {contadorDeTarefasPendentes()} PENDENTES | 
-          <span className="text-green-500 ">  {contadorDeTarefasConcluidas()}</span>
+          {contadorDeTarefasPendentes()} PENDENTES |
+          <span className="text-green-500 ">
+            {" "}
+            {contadorDeTarefasConcluidas()}
+          </span>
         </div>
 
         <Tasks
@@ -108,8 +106,7 @@ function App() {
             onClick={undoLastChange} // Função chamada ao clicar no botão
             className="fixed bottom-10 right-10 bg-red-500 text-white p-3 rounded-full shadow-lg text-center"
           >
-          <Recycle />
-            
+            <Recycle />
           </button>
         )}
       </div>

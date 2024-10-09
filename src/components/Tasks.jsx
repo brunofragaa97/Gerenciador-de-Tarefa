@@ -9,8 +9,8 @@ function Tasks(props) {
         <li key={task.id} className="flex gap-2">
           <button
             onClick={() => props.onTaskClick(task.id)} // Alterna o status de conclusão
-            className={`bg-slate-400 text-left w-full text-white p-2 rounded-md ${
-              task.isCompleted && "line-through"
+            className={`text-left w-full text-white p-2 rounded-md ${
+              task.isCompleted ? "line-through bg-green-400" : "bg-red-400"
             }`}
           >
             {task.title}
