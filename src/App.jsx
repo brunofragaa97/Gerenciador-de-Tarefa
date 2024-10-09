@@ -21,8 +21,6 @@ function App() {
 
   // Função para alternar o estado de conclusão de uma tarefa
   function onTaskClick(taskId) {
-   
-
     // Mapeia as tarefas, alternando a propriedade isCompleted da tarefa correspondente
     const newTasks = tasks.map((task) => {
       if (task.id === taskId) {
@@ -67,6 +65,19 @@ function App() {
       setTasks([...tasks, newTask])
 
   }
+  
+  function contadorDeTarefasPendentes(){
+   const contador = tasks.length;
+   const inCompleteTasks = tasks.filter(task => task.isCompleted).length;
+   return contador - inCompleteTasks;
+  }
+  function contadorDeTarefasConcluidas(){
+    const inCompleteTasks = tasks.filter(task => task.isCompleted).length;
+    if(inCompleteTasks === 1 || inCompleteTasks === 0){
+    return "| "+ inCompleteTasks + " CONCLUIDA";
+   }
+    return "| "+ inCompleteTasks +" CONCLUIDAS";
+   }
 
   return (
     <div className="w-screen min-h-screen bg-blue-950 flex justify-center p-8">
@@ -77,6 +88,14 @@ function App() {
 
         {/* Renderiza o componente de tarefas, passando as tarefas e as funções como props */}
         <AddTask onAddTaskSubmit={onAddTaskSubmit}/>
+        <h2 className="text-2xl text-white font-bold text-center">
+          TAREFAS 
+        </h2>
+        <div className="text-xl text-center text-red-400">
+          {contadorDeTarefasPendentes()} PENDENTES | 
+          <span className="text-green-500 ">  {contadorDeTarefasConcluidas()}</span>
+        </div>
+
         <Tasks
           tasks={tasks}
           onTaskClick={onTaskClick}

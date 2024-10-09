@@ -11,7 +11,8 @@ function AddTask({ onAddTaskSubmit }){
                 placeholder="Digite o titulo da tarefa: "
                 className="border border-slate-300 outline-slate-400 px-4 py-2 rounded-md"
                 value={title}
-                onChange={(event) => setTitle(event.target.value)}> 
+                onChange={(event) => setTitle(event.target.value)}>
+                 
             </input>
             <input 
                 type="text" 
@@ -21,7 +22,15 @@ function AddTask({ onAddTaskSubmit }){
                 onChange={(event) => setDescription(event.target.value)}>
             </input>
             <button 
-                onClick={() => onAddTaskSubmit(title, description)}
+                onClick={() => {
+                  if(!title.trim("")){
+                    setTitle ("");
+                    return alert ("Digite o TITULO!")
+                  }
+                  onAddTaskSubmit(title, description);
+                  setTitle("");
+                  setDescription("");
+                }}
                 className="bg-slate-500 text-white px-4 py-2 rounded-md font-medium">
                   Adcionar
             </button>
