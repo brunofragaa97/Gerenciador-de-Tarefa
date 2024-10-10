@@ -2,6 +2,7 @@ import { useState } from "react"; // Importa o hook useState do React para geren
 import AddTask from "./components/AddTask"; // Importa o componente para adicionar tarefas
 import Tasks from "./components/Tasks"; // Importa o componente que renderiza a lista de tarefas
 import { Recycle } from "lucide-react";
+import { Check } from 'lucide-react';
 
 function App() {
   // Declara um estado para armazenar o histórico das tarefas (para desfazer alterações)
@@ -71,9 +72,9 @@ function App() {
   function contadorDeTarefasConcluidas() {
     const inCompleteTasks = tasks.filter((task) => task.isCompleted).length;
     if (inCompleteTasks === 1 || inCompleteTasks === 0) {
-      return "| " + inCompleteTasks + " CONCLUIDA";
+      return "| " + inCompleteTasks + " CONCLUIDA ";
     }
-    return "| " + inCompleteTasks + " CONCLUIDAS";
+    return "| " + inCompleteTasks + " CONCLUIDAS ";
   }
 
   return (
