@@ -10,6 +10,8 @@ function Tasks({ tasks, onTaskClick, onDeleteTaskClick }) {
     const query = new URLSearchParams();
     query.set("title" , task.title);
     query.set("description" , task.description);
+    query.set("isCompleted" , task.isCompleted);
+    query.set("taskId" , task.id);
     navigate (`/task?${query.toString()}`);
   
   }
@@ -21,7 +23,7 @@ function Tasks({ tasks, onTaskClick, onDeleteTaskClick }) {
           <button
             onClick={() => onTaskClick(task.id)} // Usa 'onTaskClick' diretamente
             className={`text-left w-full text-white p-2 rounded-md ${
-              task.isCompleted ? "line-through bg-green-400" : "bg-red-400"
+              task.isCompleted ? " bg-green-400" : "bg-red-400"
             }`}
           >
             {task.title}

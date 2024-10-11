@@ -1,118 +1,123 @@
-import { useState } from "react"; // Importa o hook useState do React para gerenciar estados
-import AddTask from "./components/AddTask"; // Importa o componente para adicionar tarefas
-import Tasks from "./components/Tasks"; // Importa o componente que renderiza a lista de tarefas
-import { Recycle } from "lucide-react";
-import { Check } from 'lucide-react';
+import { useEffect, useState } from "react"; // Importa os hooks useEffect e useState do React para gerenciar estados e efeitos colaterais.
+import AddTask from "./components/AddTask"; // Importa o componente para adicionar novas tarefas.
+import Tasks from "./components/Tasks"; // Importa o componente que renderiza a lista de tarefas existentes.
+import { Recycle } from "lucide-react"; // Importa o ícone de reciclagem do pacote lucide-react.
+import Rodope from "./components/Rodope"; // Importa o componente de rodapé.
 
 function App() {
-  // Declara um estado para armazenar o histórico das tarefas (para desfazer alterações)
+  // Declara um estado para armazenar o histórico das tarefas (usado para desfazer alterações).
   const [taskHistory, setTaskHistory] = useState([]);
 
-  // Declara um estado para armazenar a lista atual de tarefas
-  const [tasks, setTasks] = useState([
-    {
-      id: 1,
-      title: "Adcione sua primeira tarefa",
-      description: "Estudar programação para ser um desenvolvedor Full Stack.",
-      isCompleted: false, // Indica se a tarefa foi concluída
-    },
-  ]);
+  // Declara um estado para armazenar a lista atual de tarefas, buscando no localStorage ou iniciando com um array vazio.
+  const [tasks, setTasks] = useState(
+    JSON.parse(localStorage.getItem("tasks")) || []
+  );
 
-  // Função para alternar o estado de conclusão de uma tarefa
+  // Função para alternar o estado de conclusão de uma tarefa.
   function onTaskClick(taskId) {
-    // Mapeia as tarefas, alternando a propriedade isCompleted da tarefa correspondente
     const newTasks = tasks.map((task) => {
+      // Itera sobre a lista de tarefas.
       if (task.id === taskId) {
-        return { ...task, isCompleted: !task.isCompleted }; // Alterna o estado de conclusão
+        // Se a tarefa for a que foi clicada, alterna seu estado de conclusão.
+        return { ...task, isCompleted: !task.isCompleted };
       }
-      return task; // Retorna a tarefa inalterada
+      return task; // Retorna a tarefa inalterada.
     });
-
-    // Atualiza o estado das tarefas com a nova lista
-    setTasks(newTasks);
+    setTasks(newTasks); // Atualiza o estado das tarefas com a nova lista.
   }
 
-  // Função para deletar uma tarefa
+  // Função para deletar uma tarefa.
   function onDeleteTaskClick(taskId) {
-    // Adiciona o estado atual das tarefas ao histórico antes de alterá-lo
     setTaskHistory([...taskHistory, tasks]);
-
-    // Filtra as tarefas para remover a tarefa com o ID correspondente
-    const newTasks = tasks.filter((task) => task.id !== taskId);
-
-    // Atualiza o estado das tarefas com a nova lista filtrada
-    setTasks(newTasks);
+    const newTasks = tasks.filter((task) => task.id !== taskId); 
+    setTasks(newTasks); 
   }
 
-  // Função para desfazer a última alteração
+  // Função para desfazer a última alteração na lista de tarefas.
   function undoLastChange() {
-    // Verifica se há histórico de tarefas para desfazer
     if (taskHistory.length > 0) {
-      const lastTasks = taskHistory[taskHistory.length - 1]; // Obtém a última versão da lista de tarefas
-      setTasks(lastTasks); // Restaura as tarefas para a versão anterior
-      setTaskHistory(taskHistory.slice(0, -1)); // Remove a última versão do histórico
+      const lastTasks = taskHistory[taskHistory.length - 1]; 
+      setTasks(lastTasks); 
+      setTaskHistory(taskHistory.slice(0, -1)); 
     }
   }
 
+  // Função para adicionar uma nova tarefa.
   function onAddTaskSubmit(title, description) {
     const newTask = {
-      id: tasks.length + 1,
-      title,
+      id: tasks.length + 1, 
+      title, 
       description,
-      isCompleted: false,
+      isCompleted: false, 
     };
-    setTasks([...tasks, newTask]);
+    setTasks([...tasks, newTask]); 
   }
 
+  // Função para contar o número de tarefas pendentes.
   function contadorDeTarefasPendentes() {
     const contador = tasks.length;
-    const inCompleteTasks = tasks.filter((task) => task.isCompleted).length;
-    return contador - inCompleteTasks;
+    const inCompleteTasks = tasks.filter((task) => task.isCompleted).length; 
+    return contador - inCompleteTasks; 
   }
+
+  // Função para contar o número de tarefas concluídas e formatar a mensagem.
   function contadorDeTarefasConcluidas() {
-    const inCompleteTasks = tasks.filter((task) => task.isCompleted).length;
-    if (inCompleteTasks === 1 || inCompleteTasks === 0) {
-      return "| " + inCompleteTasks + " CONCLUIDA ";
-    }
-    return "| " + inCompleteTasks + " CONCLUIDAS ";
+    const inCompleteTasks = tasks.filter((task) => task.isCompleted).length; 
+    return `| ${inCompleteTasks} ${
+      inCompleteTasks === 1 ? "CONCLUIDA" : "CONCLUIDAS"
+    }`; 
   }
+
+  // useEffect para sincronizar o estado das tarefas com o localStorage sempre que a lista de tarefas mudar.
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
 
   return (
-    <div className="font-mono w-screen min-h-screen bg-blue-950 flex justify-center p-8">
-      <div className="w-[500px] space-y-4 ">
-        <h1 className="text-3xl text-slate-100 font-bold text-center">
-          Gerenciador de Tarefas
-        </h1>
-
-        {/* Renderiza o componente de tarefas, passando as tarefas e as funções como props */}
-        <AddTask onAddTaskSubmit={onAddTaskSubmit} />
-        <h2 className="text-2xl text-white font-bold text-center">TAREFAS</h2>
-        <div className="text-xl text-center text-red-400">
-          {contadorDeTarefasPendentes()} PENDENTES |
-          <span className="text-green-500 ">
-            {" "}
-            {contadorDeTarefasConcluidas()}
-          </span>
+    <div className="flex flex-col min-h-screen">
+      {" "}
+      {/* Contêiner flexível para ocupar toda a altura da tela */}
+      <div className="font-mono bg-blue-950 flex justify-center p-1 flex-grow">
+        {" "}
+        {/* Contêiner para o conteúdo principal */}
+        <div className="w-[40%] ">
+          {" "}
+          {/* Define a largura do contêiner de tarefas */}
+          <h1 className="text-3xl text-slate-100 font-bold text-center p-5">
+            Gerenciador de Tarefas
+          </h1>
+          {/* Renderiza o componente para adicionar novas tarefas */}
+          <AddTask onAddTaskSubmit={onAddTaskSubmit} />
+          <h2 className="text-2xl text-white font-bold text-center mt-5">
+            TAREFAS
+          </h2>
+          <div className="text-xl text-center text-red-400 m-3">
+            {contadorDeTarefasPendentes()} PENDENTES |
+            <span className="text-green-500">
+              {contadorDeTarefasConcluidas()}
+            </span>
+          </div>
+          {/* Renderiza a lista de tarefas */}
+          <Tasks
+            tasks={tasks}
+            onTaskClick={onTaskClick}
+            onDeleteTaskClick={onDeleteTaskClick}
+          />
+          {/* Botão para desfazer a última alteração, aparece somente se houver alterações no histórico */}
+          {taskHistory.length > 0 && (
+            <button
+              onClick={undoLastChange} // Chama a função para desfazer a última alteração
+              className="fixed bottom-10 right-10 bg-red-500 text-white p-3 rounded-full shadow-lg text-center"
+            >
+              <Recycle /> {/* Ícone de reciclagem */}
+            </button>
+          )}
         </div>
-
-        <Tasks
-          tasks={tasks}
-          onTaskClick={onTaskClick}
-          onDeleteTaskClick={onDeleteTaskClick}
-        />
-
-        {/* Condicional para mostrar o botão de desfazer apenas se houver histórico */}
-        {taskHistory.length > 0 && (
-          <button
-            onClick={undoLastChange} // Função chamada ao clicar no botão
-            className="fixed bottom-10 right-10 bg-red-500 text-white p-3 rounded-full shadow-lg text-center"
-          >
-            <Recycle />
-          </button>
-        )}
       </div>
+      {/* Componente de rodapé */}
+      <Rodope />
     </div>
   );
 }
 
-export default App; // Exporta o componente App para ser utilizado em outros lugares
+export default App;

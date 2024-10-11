@@ -5,6 +5,7 @@ import './index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import TaskPage from './pages/TaskPage.jsx'  // Adicionar esta linha para importar o TaskPage
 
+
 const router = createBrowserRouter([
   {
     path: "/inicio",
